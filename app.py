@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" main app """
+""" main twitcrawler app """
 import requests
 import sys
 import time
@@ -90,7 +90,7 @@ def get_all_tweets(user_id, guest_token, auth_token) -> list:
     """ 
         Given a username, return all tweets posted by that user.
         :param: username
-        :return: A Json object of all the user's tweets
+        :return: A list of json objects containing all the user's tweets
     """ 
     url = "https://twitter.com:443/i/api/2/timeline/profile/{}.json".format(user_id)
     headers = {
@@ -100,7 +100,6 @@ def get_all_tweets(user_id, guest_token, auth_token) -> list:
     raw_posts = r.get(url, headers=headers)
 
     json_posts = json.loads(raw_posts.content)
-    # json.dumps(json_posts, indent=4, sort_keys=True) 
 
     tweets_simplified = []
 
@@ -145,7 +144,6 @@ def main():
         :return: 
     """
 
-    # Uncomment me whne done 
     if len(sys.argv) != 2:
         usage() 
         sys.exit(1)
@@ -199,7 +197,6 @@ def main():
                 print("No new tweets to report!")
 
             all_tweets_old = all_tweets_refreshed
-
 
     except KeyboardInterrupt:
         print("\n\nGoodbye!")

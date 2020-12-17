@@ -114,6 +114,13 @@ def get_all_tweets(user_id, guest_token, auth_token) -> list:
     return tweets_simplified
 
 
+def sort_tweets(tweets) -> list:
+    """
+        Supplying a list of json objects, this will sort by timestamp
+        :return: A list of tweets sorted
+    """
+    sorted_tweets = sorted(tweets, key=lambda s: s['timestamp'], reverse=True)
+    return sorted_tweets
 
 def get_recent_tweets(tweets) -> object:
     """
@@ -123,7 +130,7 @@ def get_recent_tweets(tweets) -> object:
 
     top_five = []
     count = 0
-    sorted_tweets = sorted(tweets, key=lambda s: s['timestamp'], reverse=True)
+    sorted_tweets = sort_tweets(tweets)
     for i in sorted_tweets:
         top_five.append(i)
         count += 1

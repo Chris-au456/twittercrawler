@@ -2,13 +2,10 @@
 import app as twitcrawler
 from flask import Flask
 from flask_restplus import Resource, Api, reqparse, inputs
-import requests
-import json
 
 
 app = Flask(__name__)
 api = Api(app, title="Chris' API", version="0.1")
-
 
 
 @api.route('/twitcrawler')
@@ -34,4 +31,4 @@ class TwitCrawler(Resource):
         
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, host="0.0.0.0", port=80, use_reloader=False)

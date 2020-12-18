@@ -1,12 +1,16 @@
 #!/usr/bin/python3
-""" main app """
+""" main twitcrawler app """
 import requests
 import sys
 import time
 import json
+import datetime
+import hashlib
+from operator import itemgetter
 
 
 r = requests.session()
+
 
 class Tweet: 
     """ Class for Single Twitter Post """ 
@@ -22,14 +26,18 @@ class Tweet:
             Extract post attributes and condense into simple object
             :return: Simple tweet object
         """
+
+        new_created_at = self.created_at.replace('+0000 ', '')
+        new_datetime = datetime.datetime.strptime(new_created_at, '%a %b %d %H:%M:%S %Y')
+
         tweet = {
             "id": self.uid,
+            "timestamp": int(new_datetime.timestamp()),
             "date_created": self.created_at,
             "text": self.text
         }
         return tweet
 
-        
 
 def usage() -> None:
     """
@@ -78,11 +86,11 @@ def get_user_rest_id(username, auth_token, guest_token) -> int:
     return user_id
 
 
-def get_all_tweets(user_id, guest_token, auth_token) -> object:
+def get_all_tweets(user_id, guest_token, auth_token) -> list:
     """ 
         Given a username, return all tweets posted by that user.
         :param: username
-        :return: A Json object of all the user's tweets
+        :return: A list of json objects containing all the user's tweets
     """ 
     url = "https://twitter.com:443/i/api/2/timeline/profile/{}.json".format(user_id)
     headers = {
@@ -92,7 +100,6 @@ def get_all_tweets(user_id, guest_token, auth_token) -> object:
     raw_posts = r.get(url, headers=headers)
 
     json_posts = json.loads(raw_posts.content)
-    # json.dumps(json_posts, indent=4, sort_keys=True) 
 
     tweets_simplified = []
 
@@ -106,13 +113,37 @@ def get_all_tweets(user_id, guest_token, auth_token) -> object:
     return tweets_simplified
 
 
+def sort_tweets(tweets) -> list:
+    """
+        Supplying a list of json objects, this will sort by timestamp
+        :return: A list of tweets sorted
+    """
+    sorted_tweets = sorted(tweets, key=lambda s: s['timestamp'], reverse=True)
+    return sorted_tweets
+
+def get_recent_tweets(tweets) -> object:
+    """
+        Gets the top 5 most recent tweets
+        :return: Returns an object of 5 tweets
+    """
+
+    top_five = []
+    count = 0
+    sorted_tweets = sort_tweets(tweets)
+    for i in sorted_tweets:
+        top_five.append(i)
+        count += 1
+        if count == 5:
+            break
+    return top_five
+
+
 def main():
     """
         Main method
         :return: 
     """
 
-    # Uncomment me whne done 
     if len(sys.argv) != 2:
         usage() 
         sys.exit(1)
@@ -124,11 +155,51 @@ def main():
     user_rest_id = get_user_rest_id(username, authorization_token, guest_token)
 
 
-    for i in get_all_tweets(user_rest_id, guest_token, authorization_token):
-        print(i)
+    all_tweets_old = get_all_tweets(user_rest_id, guest_token, authorization_token)
+    top_five_tweets = get_recent_tweets(all_tweets_old)
+
+    for i in range(0, len(top_five_tweets)):
+        print(top_five_tweets[i]['date_created'])
+        print(top_five_tweets[i]['text'])
+        print(username)
+        print("\n")
+    
+
+    try:
+        while True:
+            time.sleep(600) # 600 seconds in 10 minutes
+
+            guest_token = get_guest_token(authorization_token)
+            user_rest_id = get_user_rest_id(username, authorization_token, guest_token)
+
+            all_tweets_refreshed = get_all_tweets(user_rest_id, guest_token, authorization_token)
+            
+            print("\n")
+            print(datetime.datetime.now())
+            print("Latest Tweets:")
+            
+            hash_of_new_tweets = hashlib.md5()
+            hash_of_old_tweets = hashlib.md5()
+
+            hash_of_new_tweets.update(str(all_tweets_refreshed).strip().encode())
+            hash_of_old_tweets.update(str(all_tweets_old).strip().encode())
 
 
+            if hash_of_new_tweets.hexdigest() != hash_of_old_tweets.hexdigest():
+                new_tweets = [x for x in all_tweets_refreshed if x not in all_tweets_old]
+                # BUG: When the user deletes a post, one of the older tweets
+                for i in new_tweets:
+                    print(i['date_created'])
+                    print(i['text'])
+                    print(username)
+                    print("\n")
+            else:
+                print("No new tweets to report!")
 
+            all_tweets_old = all_tweets_refreshed
+
+    except KeyboardInterrupt:
+        print("\n\nGoodbye!")
 
 if __name__ == '__main__':
     main() 

@@ -150,10 +150,14 @@ The API should appear at http://127.0.0.1/
 
 Once the api is started, a simple curl command can be used to obtain the latest tweets:
 
+```
 curl -X POST "http://localhost/twitcrawler?username=cryp70_" -H  "accept: application/json"
+```
+
+
 
 Sample output:
-
+```
 {
   "cryp70_": [
     {
@@ -181,7 +185,7 @@ Sample output:
       "text": "So just..so Noble keeping them ad free https://t.co/9TfFC0Qd5G"
     },
 =========================================== SNIP ===========================================
-
+```
 
 
 ## DOCKER

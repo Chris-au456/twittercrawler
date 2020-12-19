@@ -29,7 +29,7 @@ Source: https://github.com/Foo-Manroot/tweet-feed/issues/1
 ### Step 3: 
 We now have our key headers to access a users tweets. 
 With the Authorization header and the x-guest-token header set, we need to request the target user's Rest ID via a
-GET request. This occurs at  https://api.twitter.com/graphql/4S2ihIKfF3xhp-ENxvUAfQ/UserByScreenName?variables=%7B%22screen_name%22%3A%22 <username> %22%2C%22withHighlightedLabel%22%3Atrue%7D
+GET request. This occurs at ``` https://api.twitter.com/graphql/4S2ihIKfF3xhp-ENxvUAfQ/UserByScreenName?variables=%7B%22screen_name%22%3A%22   <username>  %22%2C%22withHighlightedLabel%22%3Atrue%7D```
 
 ### Step 4:
 I learned this when trying to find out how the web application worked through burp, assessing 

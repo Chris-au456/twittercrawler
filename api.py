@@ -15,6 +15,12 @@ api = Api(app, title="Chris' API", version="0.1")
 class TwitCrawler(Resource):
 
     def post(self):
+        """
+            API Post request (given a twitter username), returns 
+            all the latest tweets by that user.
+            :param: self
+            :return: Sorted tweet objects 
+        """
         parser = reqparse.RequestParser()
         parser.add_argument('username', type=str, required=True)
         args = parser.parse_args()

@@ -8,7 +8,7 @@ that I didnt need. This was solved by serializing the posts into another json ob
 alot less complicated to work with. 
 
 
-I tried to use a range of tactics such as web browser emulation, web scraping with beautiful soup but it seems like it's clear that twitter just dont want us scraping for data across the site. 
+I tried to use a range of tactics such as web browser emulation, web scraping with beautiful soup but because of the dynamic website twitter.com is (javascript), it seems like it's clear that twitter just dont want us scraping for data across the site. 
 Doing some investigation, research and boarderline reverse engineering the application It was found that pulling tweets in json format are actually authenticated (even if you're not logged in). 
 
 ## Steps which I essentially turned into code: 

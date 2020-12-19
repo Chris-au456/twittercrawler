@@ -34,7 +34,7 @@ GET request. This occurs at  https://api.twitter.com/graphql/4S2ihIKfF3xhp-ENxvU
 ### Step 4:
 I learned this when trying to find out how the web application worked through burp, assessing 
 which requests were sent before we get the user's twitter posts.
-Pull the user's tweets via GET /2/timeline/profile/<user rest ID>.json  with the user's user rest id with Authorization and x-guest-token
+Pull the user's tweets via ```GET /2/timeline/profile/[user rest ID].json```  with the user's user rest id with Authorization and x-guest-token
 
 The below request is an example request which obtains the user's tweets after the previous steps are carried out. 
 

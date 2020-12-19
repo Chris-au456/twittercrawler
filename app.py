@@ -88,8 +88,11 @@ def get_user_rest_id(username, auth_token, guest_token) -> int:
 
 def get_all_tweets(user_id, guest_token, auth_token) -> list:
     """ 
-        Given a username, return all tweets posted by that user.
-        :param: username
+        Given a user id, the guest token and the hard coded auth token, 
+        return a list of tweet objects posted by that user.
+        :param: user_id
+        :param: guest_token
+        :param: auth_token
         :return: A list of json objects containing all the user's tweets
     """ 
     url = "https://twitter.com:443/i/api/2/timeline/profile/{}.json".format(user_id)
@@ -187,7 +190,7 @@ def main():
 
             if hash_of_new_tweets.hexdigest() != hash_of_old_tweets.hexdigest():
                 new_tweets = [x for x in all_tweets_refreshed if x not in all_tweets_old]
-                # BUG: When the user deletes a post, one of the older tweets
+                # BUG: When the user deletes a post, one of the older tweets is returned
                 for i in new_tweets:
                     print(i['date_created'])
                     print(i['text'])
